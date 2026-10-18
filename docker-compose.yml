@@ -1,0 +1,16 @@
+services:
+  ncsync:
+    build: .
+    image: ncsync:latest
+    container_name: ncsync
+    restart: unless-stopped
+    env_file: .env
+    user: "1000:1000"          # must own ./data and ./state on the host
+    volumes:
+      - ./data:/data           # the mirror (put this on your SSD/USB disk)
+      - ./state:/state         # state log; keep on the same disk as /data
+    read_only: true
+    mem_limit: 400m
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
